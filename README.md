@@ -51,4 +51,54 @@ ubicacion  "Agregas la ubicacion del incidente."
 imagenes (Seleccionas la imagen)
 
 
+GET: http://localhost:3000/api/incidencias
+Headers: 
+Authorization  Bearer <Agregas el Token> 
+(Dependiendo del Token si sos residente te saldra de mensaje): 
+{
+  "message": "Saldria todas las incidencias creadas por ese mismo residente"
+}
+(Si sos Administrador te saldra de mensaje):
+{
+  "Todos los residentes que presentaron un reporte de alguna incidencia."
+} 
+
+GET: http://localhost:3000/api/incidencias/estado/:estado ("pendiente", "en proceso", "resuelto") 
+Headers: 
+Authorization  Bearer <Agregas el Token>
+message: 
+si es residente le saldran de todos sus  estado incidencias dependiendo si es: ("pendiente", "en proceso", "resuelto")
+si es residente le saldra de todos los usuarios con el estado de su incidencias. ("pendiente", "en proceso", "resuelto")
+
+
+PUT: http://localhost:3000/api/incidencias/:id
+Headers: 
+Authorization  Bearer <Agregas el Token>
+EN BODY / Form: 
+asunto: "Actualizar el asunto"
+descripcion "Actualizar una descripcion"
+tipo "Actualizar un tipo"
+estado "Actualizar un estado"
+ubicacion  "Actualizar la ubicacion del incidente."
+
+imagenes (Seleccionas y Actualiza la imagen)
+
+DELETE: http://localhost:3000/incidencias/:Id
+Headers: 
+Authorization  Bearer <Agregas el Token>
+ message: 'Incidencia eliminada exitosamente'
+
+
+ COMENTARIOS: 
+ comentarios.controller.js
+
+POST: http://localhost:3000/api/comentarios
+Headers: 
+Authorization  Bearer <Agregas el Token> (el residente solo puede comentar sus incidencias reportadas y el admin puede responder cualquier incidencia publicada por cualquier residente.)
+BODY/JSON:
+{
+  "contenido": "Agregas comentario",
+  "incidenciaId": 3
+}
+
 

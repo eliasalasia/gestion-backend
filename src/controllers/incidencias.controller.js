@@ -42,9 +42,38 @@ export const createIncidencia = async (req, res) => {
   }
 };
 
+// Esta ruta dependiendo de que seas Administrador/residente te mostrará o todas las incidencias o todas las del mismo residente. 
 export const allIncidencias = async (req, res) => {
+  console.log('Entrando en allIncidencias');
+  console.log('Usuario en req:', req.user);
+
   try {
-    const [incidencias] = await pool.execute('SELECT * FROM incidencias');
+    const userId = req.user.id;
+    console.log('ID de usuario:', userId);
+
+    // Obtener el tipo de usuario de la tabla users
+    const [users] = await pool.execute('SELECT tipo FROM users WHERE id = ?', [userId]);
+    console.log('Resultado de la consulta de usuario:', users);
+
+    if (users.length === 0) {
+      console.log('Usuario no encontrado en la base de datos');
+      return res.status(404).json({ message: 'Usuario no encontrado' });
+    }
+
+    const userType = users[0].tipo;
+    console.log('Tipo de usuario:', userType);
+
+    let incidencias;
+
+    if (userType === 'administrador') {
+      console.log('Usuario es administrador, obteniendo todas las incidencias');
+      [incidencias] = await pool.execute('SELECT i.*, u.piso FROM incidencias i JOIN users u ON i.userId = u.id');
+    } else {
+      console.log('Usuario es residente, obteniendo sus incidencias');
+      [incidencias] = await pool.execute('SELECT i.*, u.piso FROM incidencias i JOIN users u ON i.userId = u.id WHERE i.userId = ?', [userId]);
+    }
+
+    console.log('Número de incidencias obtenidas:', incidencias.length);
 
     // Recuperar las imágenes para cada incidencia
     const incidenciasConImagenes = await Promise.all(incidencias.map(async (incidencia) => {
@@ -53,8 +82,10 @@ export const allIncidencias = async (req, res) => {
       return incidencia;
     }));
 
+    console.log('Enviando respuesta con incidencias');
     res.json(incidenciasConImagenes);
   } catch (error) {
+    console.error('Error en allIncidencias:', error);
     res.status(500).json({ message: 'Error al obtener incidencias', error: error.message });
   }
 };
@@ -62,7 +93,7 @@ export const allIncidencias = async (req, res) => {
 export const IncidenciaById = async (req, res) => {
   const { id } = req.params;
   try {
-    const [incidencia] = await pool.execute('SELECT * FROM incidencias WHERE id = ?', [id]);
+    const [incidencia] = await pool.execute('SELECT i.*, u.piso FROM incidencias i JOIN users u ON i.userId = u.id WHERE i.id = ?', [id]);
     if (incidencia.length === 0) {
       return res.status(404).json({ message: 'Incidencia no encontrada' });
     }
@@ -76,15 +107,70 @@ export const IncidenciaById = async (req, res) => {
   }
 };
 
-export const updateIncidencia = async (req, res) => {
-  const { id } = req.params;
-  const { asunto, descripcion, tipo, ubicacion } = req.body;
+export const IncidenciasByEstado = async (req, res) => {
+  const { estado } = req.params;
+  const userId = req.user.id;
 
   try {
+    // Obtener el tipo de usuario
+    const [users] = await pool.execute('SELECT tipo FROM users WHERE id = ?', [userId]);
+
+    if (users.length === 0) {
+      return res.status(404).json({ message: 'Usuario no encontrado' });
+    }
+
+    const userType = users[0].tipo;
+    let incidencias;
+
+    if (userType === 'administrador') {
+      // Administrador: obtener todas las incidencias del estado especificado
+      [incidencias] = await pool.execute(
+        'SELECT i.*, u.piso, u.nombre AS nombre_residente FROM incidencias i JOIN users u ON i.userId = u.id WHERE i.estado = ?',
+        [estado]
+      );
+    } else {
+      // Residente: obtener solo sus incidencias del estado especificado
+      [incidencias] = await pool.execute(
+        'SELECT i.*, u.piso FROM incidencias i JOIN users u ON i.userId = u.id WHERE i.estado = ? AND i.userId = ?',
+        [estado, userId]
+      );
+    }
+
+    if (incidencias.length === 0) {
+      return res.status(404).json({ message: 'No se encontraron incidencias con este estado' });
+    }
+
+    // Obtener imágenes para cada incidencia
+    const incidenciasConImagenes = await Promise.all(incidencias.map(async (incidencia) => {
+      const [imagenes] = await pool.execute('SELECT rutaImagen FROM imagenes WHERE incidenciaId = ?', [incidencia.id]);
+      incidencia.imagenes = imagenes.map(img => img.rutaImagen);
+      return incidencia;
+    }));
+
+    res.json(incidenciasConImagenes);
+  } catch (error) {
+    console.error('Error en IncidenciasByEstado:', error);
+    res.status(500).json({ message: 'Error al obtener incidencias por estado', error: error.message });
+  }
+};
+
+export const updateIncidencia = async (req, res) => {
+  const { id } = req.params;
+  const { asunto, descripcion, tipo, estado, ubicacion } = req.body;
+
+  // Log para verificar los datos recibidos
+  console.log('Datos recibidos:', { asunto, descripcion, tipo, estado, ubicacion });
+
+  try {
+    // Validar que los campos requeridos no sean undefined
+    if (asunto === undefined || descripcion === undefined || tipo === undefined || estado === undefined || ubicacion === undefined) {
+      return res.status(400).json({ message: 'Faltan campos requeridos para actualizar la incidencia' });
+    }
+
     // Actualizar la incidencia
     const [result] = await pool.execute(
-      'UPDATE incidencias SET asunto = ?, descripcion = ?, tipo = ?, ubicacion = ? WHERE id = ?',
-      [asunto, descripcion, tipo, ubicacion, id]
+      'UPDATE incidencias SET asunto = ?, descripcion = ?, tipo = ?, estado = ?, ubicacion = ? WHERE id = ?',
+      [asunto, descripcion, tipo, estado, ubicacion, id]
     );
 
     if (result.affectedRows === 0) {

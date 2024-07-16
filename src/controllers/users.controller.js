@@ -5,12 +5,12 @@ import { DB_SECRET_KEY } from '../config/config.js';
 
 export const register = async (req, res) => {
   try {
-    const { nombre, email, contraseña, tipo, apartamento } = req.body;
+    const { nombre, email, contraseña, tipo, apartamento, piso } = req.body;
     const hashedPassword = await bcrypt.hash(contraseña, 12);
 
     const [result] = await pool.execute(
-      'INSERT INTO users (nombre, email, contraseña, tipo, apartamento) VALUES (?, ?, ?, ?, ?)',
-      [nombre, email, hashedPassword, tipo, apartamento]
+      'INSERT INTO users (nombre, email, contraseña, tipo, apartamento, piso) VALUES (?, ?, ?, ?, ?, ?)',
+      [nombre, email, hashedPassword, tipo, apartamento, piso]
     );
 
     res.status(201).json({ message: 'Usuario registrado exitosamente', userId: result.insertId });
@@ -36,7 +36,7 @@ export const login = async (req, res) => {
     }
 
     const token = jwt.sign({ id: user.id }, DB_SECRET_KEY, { expiresIn: '1d' });
-    res.json({ token, user: { id: user.id, nombre: user.nombre, tipo: user.tipo } });
+    res.json({ token, user: { id: user.id, nombre: user.nombre, tipo: user.tipo, piso: user.piso } });
   } catch (error) {
     res.status(400).json({ message: 'Error al iniciar sesión', error: error.message });
   }
