@@ -75,7 +75,7 @@ export const allIncidencias = async (req, res) => {
     // Recuperar las imágenes para cada incidencia
     const incidenciasConImagenes = await Promise.all(incidencias.map(async (incidencia) => {
       const [imagenes] = await pool.execute('SELECT rutaImagen FROM imagenes WHERE incidenciaId = ?', [incidencia.id]);
-      incidencia.imagenes = imagenes.map(img => img.rutaImagen);
+      incidencia.imagenes = imagenes.map(img => `http://localhost:3000/uploads/${img.rutaImagen}`); // Asegúrate que esta ruta es correcta
       return incidencia;
     }));
 
@@ -209,5 +209,29 @@ export const deleteIncidencia = async (req, res) => {
     res.json({ message: 'Incidencia eliminada exitosamente' });
   } catch (error) {
     res.status(500).json({ message: 'Error al eliminar incidencia', error: error.message });
+  }
+};
+
+export const updateIncidenciaEstado = async (req, res) => {
+  const { id } = req.params;
+  const { estado } = req.body;
+
+  try {
+    if (!estado) {
+      return res.status(400).json({ message: 'El campo estado es requerido' });
+    }
+
+    const [result] = await pool.execute(
+      'UPDATE incidencias SET estado = ? WHERE id = ?',
+      [estado, id]
+    );
+
+    if (result.affectedRows === 0) {
+      return res.status(404).json({ message: 'Incidencia no encontrada' });
+    }
+
+    res.json({ message: 'Estado de incidencia actualizado exitosamente' });
+  } catch (error) {
+    res.status(500).json({ message: 'Error al actualizar el estado de la incidencia', error: error.message });
   }
 };
