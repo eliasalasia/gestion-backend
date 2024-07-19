@@ -2,9 +2,9 @@ import { pool } from '../config/db.js';
 
 export const createIncidencia = async (req, res) => {
   try {
-    const { asunto, descripcion, tipo, ubicacion } = req.body;
+    const { asunto, descripcion, estado, tipo, ubicacion } = req.body;
 
-    if (!asunto || !descripcion || !tipo || !ubicacion) {
+    if (!asunto || !descripcion || !estado || !tipo || !ubicacion) {
       return res.status(400).json({ message: 'Faltan campos requeridos' });
     }
 
@@ -12,14 +12,10 @@ export const createIncidencia = async (req, res) => {
       return res.status(401).json({ message: 'Usuario no autenticado' });
     }
 
-    const estado = 'pendiente';
-    const createdAt = new Date();
-    const updatedAt = new Date();
-
     // Insertar la incidencia en la tabla incidencias
     const [result] = await pool.execute(
-      'INSERT INTO incidencias (asunto, descripcion, tipo, estado, ubicacion, userId, createdAt, updatedAt) VALUES (?, ?, ?, ?, ?, ?, ?, ?)',
-      [asunto, descripcion, tipo, estado, ubicacion, req.user.id, createdAt, updatedAt]
+      'INSERT INTO incidencias (asunto, descripcion, tipo, estado, ubicacion, userId) VALUES (?, ?, ?, ?, ?, ?)',
+      [asunto, descripcion, tipo, estado, ubicacion, req.user.id]
     );
 
     const incidenciaId = result.insertId;
@@ -28,8 +24,8 @@ export const createIncidencia = async (req, res) => {
     if (req.files && req.files.length > 0) {
       const imagenesPromises = req.files.map(file => {
         return pool.execute(
-          'INSERT INTO imagenes (incidenciaId, rutaImagen, createdAt, updatedAt) VALUES (?, ?, ?, ?)',
-          [incidenciaId, file.path, createdAt, updatedAt]
+          'INSERT INTO imagenes (incidenciaId, rutaImagen) VALUES (?, ?)',
+          [incidenciaId, file.path]
         );
       });
 
@@ -38,7 +34,8 @@ export const createIncidencia = async (req, res) => {
 
     res.status(201).json({ message: 'Incidencia creada exitosamente', incidenciaId });
   } catch (error) {
-    res.status(400).json({ message: 'Error al crear incidencia', error: error.message });
+    console.error('Error al crear incidencia:', error);
+    res.status(500).json({ message: 'Error al crear incidencia', error: error.message });
   }
 };
 

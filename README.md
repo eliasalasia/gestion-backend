@@ -101,4 +101,7 @@ BODY/JSON:
   "incidenciaId": 3
 }
 
-
+GET: http://localhost:3000/api/comentarios/{incidenciasid}
+Headers: 
+Authorization  Bearer <Agregas el Token> (el residente solo puede ver su mensajes 
+con lo del admin y el administrador pueda ver los comentarios de incidencia que tienen los residentes con el.)

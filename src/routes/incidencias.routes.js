@@ -12,4 +12,4 @@ router.get('/estado/:estado', verifyToken, IncidenciasByEstado );
 router.put('/:id', verifyToken, upload.array('imagenes', 5), updateIncidencia);
 router.delete('/:id', verifyToken, deleteIncidencia);
 
-export default router;
+export default router;  
