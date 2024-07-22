@@ -1,3 +1,24 @@
+RESIDENTES: 
+EMAIL
+enzo_3@gmail.com: CONTRASEÑA: Codigo2
+bruno_1@gmail.com CONTRASEÑA: Codigo3
+palquito_1@gmail.com CONTRASEÑA: Codigo4
+Elias101@gmail.com CONTRASEÑA: Codigo1
+
+
+ADMINISTRADORES: 
+adminHar@gmail.com CONTRASEÑA: Codigo0
+Dieguitogol@gmail.com  CONTRASEÑA:Codigo99
+
+
+ESTADO: "PENDIENTE", EN PROCESO, RESUELTO
+
+
+
+
+
+
+
 Funcionamientos creados. 
 
 users.controller.js: 
