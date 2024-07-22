@@ -1,0 +1,38 @@
+[
+{"type":"header","version":"5.2.1","comment":"Export to JSON plugin for PHPMyAdmin"},
+{"type":"database","name":"incidencias_db"},
+{"type":"table","name":"comentarios","database":"incidencias_db","data":
+[
+{"id":"1","contenido":"Todavia estoy esperndo una respuesta","userId":"2","incidenciaId":"1","createdAt":"2024-07-16 13:00:48","updatedAt":"2024-07-16 13:00:48"},
+{"id":"2","contenido":"Lo siento ya estoy llamando al tecnico","userId":"7","incidenciaId":"1","createdAt":"2024-07-16 13:53:02","updatedAt":"2024-07-16 13:53:02"},
+{"id":"3","contenido":"Damos por finalizado el problema muchas gracias por reportar.","userId":"7","incidenciaId":"3","createdAt":"2024-07-16 13:54:39","updatedAt":"2024-07-16 13:54:39"},
+{"id":"4","contenido":"Excelente Servicio muchas gracias","userId":"6","incidenciaId":"3","createdAt":"2024-07-16 13:55:34","updatedAt":"2024-07-16 13:55:34"}
+]
+}
+,{"type":"table","name":"imagenes","database":"incidencias_db","data":
+[
+{"id":"4","incidenciaId":"3","rutaImagen":"uploads\\1721147986644-EnzoF.jpeg","createdAt":"2024-07-16 11:39:46","updatedAt":"2024-07-16 11:39:46"},
+{"id":"5","incidenciaId":"2","rutaImagen":"uploads\\1721148166299-EnzoF.jpeg","createdAt":"2024-07-16 11:42:46","updatedAt":"2024-07-16 11:42:46"},
+{"id":"10","incidenciaId":"8","rutaImagen":"uploads\\1721415256752-lavamanos.jpeg","createdAt":"2024-07-19 13:54:17","updatedAt":"2024-07-19 13:54:17"},
+{"id":"12","incidenciaId":"1","rutaImagen":"uploads\\1721512935901-Chicharito.jpeg","createdAt":"2024-07-20 17:02:16","updatedAt":"2024-07-20 17:02:16"}
+]
+}
+,{"type":"table","name":"incidencias","database":"incidencias_db","data":
+[
+{"id":"1","asunto":"Problema con el servidor","descripcion":"No se puede acceder al servidor desde las 10:00 AM","tipo":"Urgente","estado":"pendiente","ubicacion":"Sala de servidores 2","userId":"2","createdAt":"2024-07-15 14:24:12","updatedAt":"2024-07-20 17:02:16"},
+{"id":"2","asunto":"Cerradura rota","descripcion":"no puedo cerrarlo, no esta girando","tipo":"Urgente","estado":"en proceso","ubicacion":"Primer piso habitacion 104 puerta principal","userId":"4","createdAt":"2024-07-15 16:26:42","updatedAt":"2024-07-19 15:22:20"},
+{"id":"3","asunto":"dpto. Humedad ","descripcion":"Tengo Humendad en la cocina se esta arruinando la pared.","tipo":"Grave","estado":"pendiente","ubicacion":"Primer piso habitacion 102 en la cocina.","userId":"6","createdAt":"2024-07-15 17:43:45","updatedAt":"2024-07-19 15:22:22"},
+{"id":"8","asunto":"Se rompio el lavamanos ","descripcion":"Se me rompio y se vino abajo el lavamanos tengo una inundacion en mi departamento.","tipo":"urgente ","estado":"resuelto","ubicacion":"dpto 102 Primer Piso ","userId":"2","createdAt":"2024-07-19 13:54:16","updatedAt":"2024-07-19 15:22:27"}
+]
+}
+,{"type":"table","name":"users","database":"incidencias_db","data":
+[
+{"id":"2","nombre":"Enzo Alasia","email":"enzo_3@gmail.com","contraseña":"$2a$12$Yy75rwg6WxziLNT.SJGz5u7nEVbFuSL4EmasEsNhe\/4AIWQRMhISi","tipo":"residente","apartamento":"102","notificaciones":null,"createdAt":"2024-07-15 10:02:16","updatedAt":"2024-07-16 11:14:58","piso":"1"},
+{"id":"3","nombre":"Bruno Alasia","email":"bruno_1@gmail.com","contraseña":"$2a$12$pvQp6zOv5FXFClIk69dvWuD1dHZc1OX8Q9Rsxb2b23sA89tf7lmpC","tipo":"residente","apartamento":"103","notificaciones":null,"createdAt":"2024-07-15 10:02:35","updatedAt":"2024-07-16 11:14:58","piso":"1"},
+{"id":"4","nombre":"Jaime Palco","email":"palquito_1@gmail.com","contraseña":"$2a$12$OqE7HSetucSeSdUIOyVN6u5I9FySYNmV80kzKB0eOp70MrcteMTva","tipo":"residente","apartamento":"104","notificaciones":null,"createdAt":"2024-07-15 11:01:08","updatedAt":"2024-07-16 11:14:29","piso":"1"},
+{"id":"6","nombre":"Elias Alasia","email":"Elias101@gmail.com","contraseña":"$2a$12$OhWt.AJilK8B6c62A7FFROS8iOcRy3fTbiVltmNcXy9PGFM0PraiW","tipo":"residente","apartamento":"101","notificaciones":null,"createdAt":"2024-07-15 16:37:30","updatedAt":"2024-07-16 11:14:29","piso":"1"},
+{"id":"7","nombre":"Harold C","email":"adminHar@gmail.com","contraseña":"$2a$12$8nXhAavLHfI48jmWNw7WSu\/tmrMQJic11z28wr6\/1QvC.3af7vBoW","tipo":"administrador","apartamento":"100","notificaciones":null,"createdAt":"2024-07-15 16:38:53","updatedAt":"2024-07-16 11:14:29","piso":"0"},
+{"id":"8","nombre":"Diego Huarsaya","email":"Dieguitogol@gmail.com","contraseña":"$2a$12$pdVun0kIps19s3Edr.MiIuREpNCIFhuNB2Y2IAl2Wxa8JNKG235Y2","tipo":"administrador","apartamento":"99","notificaciones":null,"createdAt":"2024-07-15 16:39:22","updatedAt":"2024-07-16 11:14:29","piso":"0"}
+]
+}
+]
