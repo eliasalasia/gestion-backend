@@ -2,4 +2,3 @@ node_modules
 .env 
 package.json 
 uploads
-incidencias_db.sql
